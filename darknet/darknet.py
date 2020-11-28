@@ -538,9 +538,7 @@ if __name__ == "__main__":
     net_weights = options.weights
     result_list = list()
     obj = dict()
-    index = 0
     for image in image_list:
-      index = index + 1
       image_file_path = image_dic+image
       detects = performDetect(imagePath=image_file_path, metaPath=net_data, configPath=net_config, weightPath=net_weights)
       detection_only = detects['detections']
@@ -559,7 +557,7 @@ if __name__ == "__main__":
         result_list.append(obj)
     with open('submit.json','a+') as f:
       json.dump(result_list, f)
-    print("Number of images: {}".format(index))
+    # print("Number of images: {}".format(index))
     print("Done")
 
     # print(performDetect())
