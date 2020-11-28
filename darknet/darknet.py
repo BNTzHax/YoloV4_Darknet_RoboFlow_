@@ -542,10 +542,10 @@ if __name__ == "__main__":
       image_file_path = image_dic+str(image)
       image_detects = performDetect(imagePath=str(image_file_path), weightPath = net_weights)
       detection_only = image_detects['detections']
-      for detect in detection_only:
+      for img_detect in detection_only:
         obj['image_id'] = str(image).replace('.png','')
-        obj['category_id'] = detect[0]
-        bbox = detect[2]
+        obj['category_id'] = img_detect[0]
+        bbox = img_detect[2]
         x = bbox[0]
         y = bbox[1]
         w = bbox[2]
@@ -553,7 +553,7 @@ if __name__ == "__main__":
         x = x - w/2
         y = y - h/2
         obj['bbox'] = [x, y, w, h]
-        obj['score'] = detect[1]
+        obj['score'] = img_detect[1]
         result_list.append(obj)
     with open('submit.json','a+') as f:
       json.dump(result_list, f)
