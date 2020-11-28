@@ -31,6 +31,14 @@ from ctypes import *
 import math
 import random
 import os
+from optparse import OptionParser
+
+parser = OptionParser()
+parser.add_option("-i", "--image_path", dest="image_path", help="Image input path")
+parser.add_option("-c", "--config",dest="config", help="Base network structure config data.", default='cfg/yolov4-custom.cfg')
+parser.add_option("-d", "--data",dest="data", help="Data config file", default="yolo.data")
+parser.add_option("-w", "--weights",dest="weights", help="Weights path")
+(options, args) = parser.parse_args()
 
 def sample(probs):
     s = sum(probs)
@@ -522,6 +530,11 @@ def performBatchDetect(thresh= 0.25, configPath = "./cfg/yolov4.cfg", weightPath
     return batch_boxes, batch_scores, batch_classes    
 
 if __name__ == "__main__":
-    print(performDetect())
+    image_dic = options.image_path
+    image_list = os.listdir(image_dic)
+    for image in image_list:
+      image_file_path = image_dic+image
+      print(image_file_path)
+    # print(performDetect())
     #Uncomment the following line to see batch inference working 
     #print(performBatchDetect())
