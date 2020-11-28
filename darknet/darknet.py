@@ -36,8 +36,8 @@ from optparse import OptionParser
 
 parser = OptionParser()
 parser.add_option("-i", "--image_path", dest="image_path", help="Image input path")
-parser.add_option("-c", "--config",dest="config", help="Base network structure config data.", default='cfg/yolov4-custom.cfg')
-parser.add_option("-d", "--data",dest="data", help="Data config file", default="yolo.data")
+parser.add_option("-c", "--cfg",dest="cfg", help="Base network structure config data.", default='cfg/yolov4-custom.cfg')
+parser.add_option("-d", "--net_data",dest="net_data", help="Data config file", default="yolo.data")
 parser.add_option("-w", "--weights",dest="weights", help="Weights path")
 (options, args) = parser.parse_args()
 
@@ -322,7 +322,7 @@ netMain = None
 metaMain = None
 altNames = None
 
-def performDetect(imagePath="data/dog.jpg", thresh= 0.25, configPath = "./cfg/yolov4.cfg", weightPath = "yolov4.weights", metaPath= "./cfg/coco.data", showImage= True, makeImageOnly = False, initOnly= False):
+def performDetect(imagePath="data/dog.jpg", thresh= 0.25, configPath = options.cfg, weightPath = "yolov4.weights", metaPath= options.net_data, showImage= True, makeImageOnly = False, initOnly= False):
     """
     Convenience function to handle the detection and returns of objects.
 
@@ -533,15 +533,15 @@ def performBatchDetect(thresh= 0.25, configPath = "./cfg/yolov4.cfg", weightPath
 if __name__ == "__main__":
     image_dic = options.image_path
     image_list = os.listdir(image_dic)
-    net_config = options.config
-    net_data = options.data
-    net_weights = options.weights
+    net_config = str(options.cfg)
+    net_data = str(options.net_data)
+    net_weights = str(options.weights)
     result_list = list()
     obj = dict()
     for image in image_list:
-      image_file_path = image_dic+image
-      detects = performDetect(imagePath=image_file_path, metaPath=net_data, configPath=net_config, weightPath=net_weights)
-      detection_only = detects['detections']
+      image_file_path = image_dic+str(image)
+      image_detects = performDetect(imagePath=str(image_file_path), weightPath = net_weights)
+      detection_only = image_detects['detections']
       for detect in detection_only:
         obj['image_id'] = str(image).replace('.png','')
         obj['category_id'] = detect[0]
