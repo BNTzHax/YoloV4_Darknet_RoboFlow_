@@ -543,24 +543,25 @@ if __name__ == "__main__":
       index = index + 1
       image_file_path = image_dic+image
       detects = performDetect(imagePath=image_file_path, metaPath=net_data, configPath=net_config, weightPath=net_weights)
-      detects = detects['detections']
-      for detect in detects:
-        print(detect)
+      detection_only = detects['detections']
+      for detect in detection_only:
         obj['image_id'] = str(image).replace('.png','')
         obj['category_id'] = detect[0]
-        x = detect[2][0]
-        y = detect[2][1]
-        w = detect[2][2]
-        h = detect[2][3]
+        bbox = detect[2]
+        x = bbox[0]
+        y = bbox[1]
+        w = bbox[2]
+        h = bbox[3]
         x = x - w/2
         y = y - h/2
         obj['bbox'] = [x, y, w, h]
         obj['score'] = detect[1]
         result_list.append(obj)
-    with open('submit.jon','a+') as f:
+    with open('submit.json','a+') as f:
       json.dump(result_list, f)
     print("Number of images: {}".format(index))
     print("Done")
+
     # print(performDetect())
     #Uncomment the following line to see batch inference working 
     #print(performBatchDetect())
