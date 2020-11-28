@@ -29,6 +29,7 @@ Windows Python 2.7 version: https://github.com/AlexeyAB/darknet/blob/fc496d52bf2
 #pylint: disable=R, W0401, W0614, W0703
 from ctypes import *
 import math
+import json
 import random
 import os
 from optparse import OptionParser
@@ -532,9 +533,29 @@ def performBatchDetect(thresh= 0.25, configPath = "./cfg/yolov4.cfg", weightPath
 if __name__ == "__main__":
     image_dic = options.image_path
     image_list = os.listdir(image_dic)
+    net_config = options.config
+    net_data = options.data
+    net_weights = options.weights
+    result_list = list()
+    obj = dict()
     for image in image_list:
       image_file_path = image_dic+image
-      print(image_file_path)
+      detects = performDetect(image_path=image_file_path, metaPath=net_data, configPath=net_config, weightPath=net_weights)
+      for detect in detects:
+        obj['image_id'] = str(image).replace('.png','')
+        obj['category_id'] = dectect[0]
+        x = dectect[2][0]
+        y = dectect[2][1]
+        w = dectect[2][2]
+        h = dectect[2][3]
+        x = x - w/2
+        y = y - h/2
+        obj['category_id'] = [x, y, w, h]
+        obj['score'] = dectect[1]
+        result_list.append(obj)
+        print(obj)
+        break
+      break
     # print(performDetect())
     #Uncomment the following line to see batch inference working 
     #print(performBatchDetect())
